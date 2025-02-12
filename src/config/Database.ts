@@ -22,6 +22,11 @@ const sequelize = new Sequelize(
   try {
     await sequelize.authenticate();
     console.log("✅ Connected to PostgreSQL successfully!");
+
+        // Sync models and create tables
+        await sequelize.sync({ alter: true });
+
+
   } catch (error) {
     console.error("❌ Connection error:", error);
     process.exit(1);
