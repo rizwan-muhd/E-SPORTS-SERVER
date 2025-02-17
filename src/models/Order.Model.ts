@@ -2,7 +2,14 @@ import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../config/Database";
 import User from "./User.Model";
 
-class Order extends Model {}
+class Order extends Model {
+  public id!: string;
+  public userId!: string;
+  public totalAmount!: Number;
+  public paymentStatus!: string;
+  public orderStatus!: string;
+  public shippingAddress!: string;
+}
 
 Order.init(
   {
@@ -11,7 +18,7 @@ Order.init(
     totalAmount: { type: DataTypes.FLOAT, allowNull: false },
     paymentStatus: { type: DataTypes.ENUM("pending", "completed", "failed"), defaultValue: "pending" },
     orderStatus: { type: DataTypes.ENUM("processing", "shipped", "delivered", "canceled"), defaultValue: "processing" },
-    address: { type: DataTypes.JSON, allowNull: false },
+    shippingAddress: { type: DataTypes.JSON, allowNull: false },
   },
   { sequelize, modelName: "Order" }
 );

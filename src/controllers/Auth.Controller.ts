@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { registerUser } from "../services/Auth.Service";
+import { registerUser, loginUser, sendResetPasswordEmail, googleAuth } from "../services/Auth.Service";
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response): Promise<any> => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
@@ -15,4 +15,34 @@ export const register = async (req: Request, res: Response) => {
     return res.status(400).json({ message: error.message });
   }
 };
+
+export const login = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { email, password } = req.body;
+    const user = await loginUser(email, password)
+    if (user) {
+      res.status(200).json({ message: "login success", user })
+    }
+
+
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message })
+  }
+}
+
+export const resetPassword = () => {
+
+}
+
+export const forgetpassword = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { email } = req.body
+    console.log(email)
+    const reset = await sendResetPasswordEmail(email)
+    res.status(200).json({ message: "send success" })
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message })
+  }
+}
+
 
