@@ -13,9 +13,16 @@ Token.init({
         type: DataTypes.STRING,
         allowNull: false
     },
-    expiry: {
+    type: {
+        type: DataTypes.ENUM('ACCESS_TOKEN', 'REFRESH_TOKEN', 'RESET_TOKEN'),
+    },
+    expires: {
         type: DataTypes.DATE,
         allowNull: false
+    },
+    blacklisted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 
 }, {

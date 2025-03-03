@@ -42,6 +42,9 @@ googleAuth()
 
 // ROUTES
 app.use('/api/v1', routes)
+app.get('/hello', (req, res) => {
+    res.send('hello')
+})
 
 
 //SERVICES

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { registerUser, loginUser, sendResetPasswordEmail, googleAuth } from "../services/Auth.Service";
+import { registerUser, loginUser, sendResetPasswordEmail } from "../services/Auth.Service";
 
 export const register = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -7,7 +7,6 @@ export const register = async (req: Request, res: Response): Promise<any> => {
     if (!name || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
-
     const newUser = await registerUser(name, email, password);
 
     res.status(201).json({ message: "User registered successfully", user: newUser });
@@ -30,9 +29,14 @@ export const login = async (req: Request, res: Response): Promise<any> => {
   }
 }
 
-export const resetPassword = () => {
-
-}
+// export const resetPassword = async (req: Request, res: Response) => {
+//   try {
+//     const { password } = req.body
+//     await resetPasswordService(password)
+//   } catch (error: any) {
+//     res.status(400).json({ message: error.message })
+//   }
+// }
 
 export const forgetpassword = async (req: Request, res: Response): Promise<any> => {
   try {

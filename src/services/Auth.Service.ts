@@ -48,9 +48,9 @@ export const loginUser = async (email: string, password: string) => {
 }
 
 
-if (!ACCESS_TOKEN_SECRET || !REFRESH_TOKEN_SECRET) {
-  throw new Error("JWT secret keys are not defined in environment variables.");
-}
+// if (!ACCESS_TOKEN_SECRET || !REFRESH_TOKEN_SECRET) {
+//   throw new Error("JWT secret keys are not defined in environment variables.");
+// }
 
 export const generateAccessToken = (user: { id: string; role: string }) => {
   return jwt.sign({ id: user.id, role: user.role }, ACCESS_TOKEN_SECRET, {
@@ -72,6 +72,14 @@ export const sendResetPasswordEmail = async (to: string) => {
   await sendEmail(to, subject, text);
 };
 
+// export const resetPassword = async (password: string) => {
+//   const user = User.find
+// }
+
+export const verifyToken = () => {
+
+}
+
 
 // export const generateResetPasswordToken = async (email: string) => {
 //   const user = await User.findOne({ where: { email } });
@@ -79,11 +87,17 @@ export const sendResetPasswordEmail = async (to: string) => {
 //     throw new Error('User Not found')
 //   }
 //   const expires = moment().add(config.jwt.resetPasswordExpirationMinutes, 'minutes');
-//   const resetPasswordToken = generateToken(user.id, expires, tokenTypes.RESET_PASSWORD);
+//   const resetPasswordToken = generateResetToken(user);
 //   await saveToken({ token: resetPasswordToken, userId: user.id, expires, type: tokenTypes.RESET_PASSWORD });
 //   console.log(resetPasswordToken);
 //   return resetPasswordToken;
 // };
+
+export const generateResetToken = (user: { id: string; role: string }) => {
+  return jwt.sign({ id: user.id, role: user.role }, ACCESS_TOKEN_SECRET, {
+    expiresIn: ACCESS_TOKEN_EXPIRY as jwt.SignOptions["expiresIn"], // Explicit type casting
+  });
+};
 
 
 export const googleAuth = () => {

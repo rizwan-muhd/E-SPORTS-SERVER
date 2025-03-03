@@ -1,7 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../config/Database';
 
-class Product extends Model{ }
+class Product extends Model { }
 
 Product.init({
     id: {
@@ -11,28 +11,33 @@ Product.init({
     },
     name: {
         type: DataTypes.STRING,
-        allowNull:false,
+        allowNull: false,
     },
     description: {
         type: DataTypes.TEXT,
-        allowNull:true,
+        allowNull: true,
     },
     price: {
         type: DataTypes.FLOAT,
-        allowNull:false,
+        allowNull: false,
     },
     category: {
         type: DataTypes.STRING,
-        allowNull:false,
+        allowNull: false,
     },
     stock: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    status: {
+        type: DataTypes.ENUM('active', 'in-active', 'blocked'),
+        allowNull: false,
+        defaultValue: 'active'
+    },
     imageUrls: {
         type: DataTypes.JSONB,
         allowNull: true,
-        defaultValue:[]
+        defaultValue: []
     },
 },
     { sequelize, modelName: "Product" }
