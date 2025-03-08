@@ -9,7 +9,8 @@ class User extends Model {
     public role!: string;
     public phone!: string;
     public address!: string;
-    public status!: string
+    public status!: string;
+    public rewardPoints!: number;
 }
 
 User.init(
@@ -49,6 +50,23 @@ User.init(
             type: DataTypes.ENUM('active', 'in-active', 'blocked'),
             allowNull: false,
             defaultValue: 'active'
+        },
+        referralCode: {
+            type: DataTypes.STRING,
+            unique: true,
+        },
+        referredBy: {
+            type: DataTypes.UUID,
+            allowNull: true,
+            references: {
+                model: "Users",
+                key: "id"
+            }
+        },
+        rewardPoints: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+            allowNull: true,
         }
     },
     {

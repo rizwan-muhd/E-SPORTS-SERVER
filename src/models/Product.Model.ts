@@ -1,7 +1,17 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../config/Database';
+import Category from './Category.Model';
 
-class Product extends Model { }
+class Product extends Model {
+    public id!: string;
+    public name!: string;
+    public description!: string;
+    public price!: number;
+    public category!: string;
+    public stock!: number;
+    public status!: 'active' | 'in-active' | 'blocked';
+    public imageUrls!: string[];
+}
 
 Product.init({
     id: {
@@ -21,9 +31,14 @@ Product.init({
         type: DataTypes.FLOAT,
         allowNull: false,
     },
-    category: {
-        type: DataTypes.STRING,
+    categoryId: {
+        type: DataTypes.UUID,
         allowNull: false,
+        references: {
+            model: Category,
+            key: 'id'
+        },
+        onDelete: 'CASCADE'
     },
     stock: {
         type: DataTypes.INTEGER,
@@ -42,5 +57,8 @@ Product.init({
 },
     { sequelize, modelName: "Product" }
 );
+
+Product.belongsTo(Category, { foreignKey: 'categoryId', as: 'category' });
+Category.hasMany(Product, { foreignKey: 'categoryId', as: 'products' });
 
 export default Product;

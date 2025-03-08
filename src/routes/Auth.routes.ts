@@ -41,5 +41,6 @@ router.get("/logout", (req, res) => {
 
 // Forget Password
 router.post("/forget-password", forgetpassword);
+router.post('/reset-password')
 
 export default router;

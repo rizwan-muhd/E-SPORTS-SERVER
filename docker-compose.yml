@@ -3,6 +3,7 @@ version: "3.8"
 services:
   app:
     container_name: e-sports-server
+    restart: always
     build: .
     ports:
       - "7010:7010"

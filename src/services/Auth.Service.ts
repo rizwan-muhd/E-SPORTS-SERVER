@@ -5,6 +5,7 @@ import { sendEmail } from '../utils/Email.Service'
 import { templateText } from '../utils/Email.template'
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { v4 as uuidv4 } from "uuid";
 
 // Load environment variables from .env file
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || "";
@@ -12,8 +13,12 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || "";
 const ACCESS_TOKEN_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY || "15m";
 const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY || "7d";
 
-export const registerUser = async (name: string, email: string, password: string) => {
+export const registerUser = async (name: string, email: string, password: string, role: string, phone: string, address: string, referralCode: string) => {
   try {
+    let referredByUser = null;
+    if (referralCode) {
+      referredByUser = await User.findOne({ where: { referralCode: referralCode } });
+    }
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       throw new Error("Email already in use");
@@ -21,9 +26,13 @@ export const registerUser = async (name: string, email: string, password: string
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = await User.create({ name, email, password: hashedPassword });
-
-    return newUser;
+    const newUser = await User.create({
+      name, email, password: hashedPassword, role, phone, address, referralCode: generateReferralCode(name),  // Generate new user's referral code
+      referredBy: referredByUser ? referredByUser.id : null
+    });
+    if (referredByUser) {
+      await referredByUser.update({ rewardPoints: (referredByUser.rewardPoints || 0) + 10 });
+    }
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -137,5 +146,11 @@ export const googleAuth = () => {
     done(null, user as any);
   });
 };
+
+export const generateReferralCode = (name: string) => {
+  return name.toLowerCase().replace(/\s+/g, "") + "-" + uuidv4().slice(0, 6);
+};
+
+
 
 

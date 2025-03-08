@@ -8,6 +8,7 @@ import passport from "passport";
 import routes from './routes'
 import session from "express-session";
 import { googleAuth } from "./services/Auth.Service"; // Import the Google Auth function
+import { handleWebhookRequest } from './controllers/stripe.controller';
 
 
 //IMPORT ROUTES
@@ -26,6 +27,8 @@ app.use(
         cookie: { secure: false }, // Set to `true` if using HTTPS
     })
 );
+app.post('/webhook', express.raw({ type: 'application/json' }), handleWebhookRequest)
+
 app.use(express.json());
 app.use(helmet())
 app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));

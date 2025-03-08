@@ -1,13 +1,22 @@
 import { Request, Response } from "express";
 import { registerUser, loginUser, sendResetPasswordEmail } from "../services/Auth.Service";
 
+interface UserAttributes {
+  name: string;
+  email: string;
+  password: string;
+  role: "user" | "admin";
+  phone?: string;
+  address?: object;
+  status: "active" | "in-active" | "blocked";
+}
 export const register = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role, phone, address, referralCode } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    const newUser = await registerUser(name, email, password);
+    const newUser = await registerUser(name, email, password, role, phone, address, referralCode);
 
     res.status(201).json({ message: "User registered successfully", user: newUser });
   } catch (error: any) {
